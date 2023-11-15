@@ -1,0 +1,81 @@
+.card {
+    padding: 10px;
+    box-shadow: 0 0 5px rgb(243, 243, 243);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.card .top{
+    text-align: center;
+}
+
+.card p {
+    font-weight: bold;
+    color: blue;
+}
+
+.drag-over {
+    background-color: #f0f0f0;
+}
+
+.card .drag-area{
+    border-radius: 5px;
+    color: lightblue;
+    background: whitesmoke;
+    display: flex;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    margin-top: 10px;
+}
+
+.card .select{
+    color: blueviolet;
+    margin-left: 5px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.card .select:hover {
+    opacity: 0.6;
+}
+
+.card .container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.card .container .image span {
+    position: absolute;
+    top: -2px;
+    right: 9px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.card .container .image {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.card input,
+.card .drag-area .on-drop,
+.card .drag-area.dragover .visible {
+    display: none;
+}
+
+.delete{
+    z-index: 999;
+    color: black;
+}
