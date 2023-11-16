@@ -1,4 +1,4 @@
-# based on https://github.com/pochih/CBIR/blob/master/src/color.py
+
 
 import os
 import cv2
