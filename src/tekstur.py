@@ -24,13 +24,14 @@ def coOccureanceMat(gambar):
         for j in range(width-1):
             cooccurrence_Matrix[image[i, j], image[i, j+1]] += 1
     
+    cooccurrence_Matrix = np.transpose(cooccurrence_Matrix) + cooccurrence_Matrix
     sum_matrix = np.sum(cooccurrence_Matrix)
     normalized_matrix = cooccurrence_Matrix / sum_matrix
 
     return normalized_matrix
 
 def features(gambar):
-    cooccurence =coOccureanceMat(gambar)
+    cooccurence = coOccureanceMat(gambar)
     contrast = np.sum(np.square(np.arange(256)[:, np.newaxis] - np.arange(256)[np.newaxis, :]) * cooccurence)
     entropy = -np.sum(cooccurence * np.log(cooccurence + np.finfo(float).eps))
     homogeneity = np.sum(cooccurence / (1 + np.abs(np.arange(256)[:, np.newaxis] - np.arange(256)[np.newaxis, :])))
@@ -39,12 +40,8 @@ def features(gambar):
     vektor[1] =  homogeneity
     vektor[2] =  entropy
     return vektor
-vektor = features(img)
-print(vektor)
 
-def cosineSimilarity(img1, img2):
-    vektor1 = features(img1)
-    vektor2 = features(img2)
+def cosineSimilarity(vektor1, vektor2):
     a = 0
     b = 0
     c = 0
@@ -58,8 +55,6 @@ def cosineSimilarity(img1, img2):
     similarity = a/bawah
     return similarity 
         
-print(cosineSimilarity(img,img2))
-
 
 
 
