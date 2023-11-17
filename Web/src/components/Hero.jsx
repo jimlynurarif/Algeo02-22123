@@ -1,14 +1,16 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
+import { Link }  from 'react-router-dom';
 
 
-const Hero = () => {
+const Hero = ({onScrollToImageUpload}) => {
     return ( 
         <div>
             <section className="max-w[800px] 
-                                mt-[-180px] 
+                                mt-[-100px] 
+                                mb-[20px]
                                 w-full 
-                                h-screen 
+                                min-h-screen
                                 mx-auto 
                                 text-center 
                                 flex flex-col justify-center">
@@ -59,11 +61,11 @@ const Hero = () => {
                     before with our advanced Matrix technology.
                 </p>
                 <div className="flex justify-center items-center gap-6 py-5">
-                    <a href="#buttons-with-link">
+                    <Link to='/guide'>
                         <Button variant="outlined" color="green">Explore the Guide</Button>
-                    </a>
+                    </Link>
                     <a href="#buttons-with-link">
-                        <Button variant="gradient" color="green">
+                        <Button variant="gradient" color="green" onClick={onScrollToImageUpload}>
                             Start Image Processing
                         </Button>
                     </a>
