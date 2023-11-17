@@ -1,6 +1,9 @@
 import os
 import cv2
 import numpy as np
+import time
+
+start_time = time.time()
 
 def rgb_to_hsv_vectorized(image):
     img = image.astype('float32') / 255.0
@@ -42,8 +45,8 @@ def rgb_to_hsv_vectorized(image):
 
 def calculate_histogram(image):
     hsv_image = rgb_to_hsv_vectorized(image)
-    h_bins = 180
-    s_bins = 256
+    h_bins = 8
+    s_bins = 8
     hist, _ = np.histogramdd(hsv_image.reshape(-1, 3), bins=(h_bins, s_bins, s_bins), range=((0, 180), (0, 1), (0, 1)))
     hist = hist.flatten()
     hist = hist / np.sum(hist)
@@ -90,8 +93,10 @@ def search_similar_images(query_image_path, dataset_path, threshold=0.6):
     return similar_images
 
 # Example usage:
-query_image_path = r'C:\Users\Arif Rahmat\Documents\bg_laptop\Boeing 747 8.png'
-dataset_path = r'C:\Users\Arif Rahmat\Documents\bg_laptop'
+#r'C:\Users\Arif Rahmat\Documents\Kuliah\Tingkat 2\Algeo\Algeo02-22123\src\dataset\5.jpg'
+query_image_path = input("Masukkan path gambar: ")
+#r'C:\Users\Arif Rahmat\Documents\Kuliah\Tingkat 2\Algeo\Algeo02-22123\src\data'
+dataset_path = input("Masukkan path dataset: ")
 
 similar_images = search_similar_images(query_image_path, dataset_path)
 
@@ -99,3 +104,6 @@ similar_images = search_similar_images(query_image_path, dataset_path)
 print("Similar images:")
 for image, similarity in similar_images:
     print(f"{image}: {similarity}")
+
+#print running time
+print("--- %s seconds ---" % (time.time() - start_time))
