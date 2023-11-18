@@ -25,20 +25,23 @@ def arrimgToVektor(path):
     selisih = finish - start
     print (f"waktu : {selisih}")
     
+    csv_filename = "output.csv"
+    with open(csv_filename, 'w', newline='') as csvfile:
+            # Tentukan header
+            fieldnames = ["img", "vektor"]
+
+            # Inisialisasi objek writer
+            csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # Tulis header
+            csvwriter.writeheader()
+
+            # Tulis data
+            csvwriter.writerows(arrObj)
+
     return arrObj
-    
+path = "C:\\Users\\Dhinto\\Documents\\GitHub\\Algeo02-22123\\src\\dataset"
+arrimgToVektor(path)
    
-csv_filename = "output.csv"
-with open(csv_filename, 'w', newline='') as csvfile:
-        # Tentukan header
-        fieldnames = ["img", "vektor"]
 
-        # Inisialisasi objek writer
-        csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # Tulis header
-        csvwriter.writeheader()
-
-        # Tulis data
-        csvwriter.writerows(arrObj)
 
