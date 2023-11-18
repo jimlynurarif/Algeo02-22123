@@ -8,10 +8,6 @@ import OurTeam from "./components/OurTeam";
 import GuidePage from "./components/GuidePage";
 
 function App() {
-  const imagesList = Array.from({ length: 100 }, (_, index) => ({
-    src: `https://via.placeholder.com/300x200?text=Image${index + 1}`,
-    alt: `Image ${index + 1}`,
-  }));
 
   const imageUploadRef = useRef(null);
   const scrollToImageUpload = () => {
@@ -19,14 +15,12 @@ function App() {
       imageUploadRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
   const HomePage = useRef(null);
   const scrollToHomePage = () => {
     if (HomePage.current) {
       HomePage.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
 
 
   return (
@@ -41,12 +35,11 @@ function App() {
                 element={
                   <>
                     <div ref={HomePage}>
-                      <Hero onScrollToImageUpload={scrollToImageUpload} />
+                      <Hero onScrollToImageUpload={scrollToImageUpload}/>
                     </div>
                     <div ref={imageUploadRef}>
-                      <ImageUpload />
+                      <ImageUpload/>
                     </div>
-                    <ImageGallery images={imagesList} />
                   </>
                 }
               />

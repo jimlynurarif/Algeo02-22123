@@ -3,6 +3,7 @@
 import React from 'react';
 import img1 from './foto/330194.jpg'
 import img2 from './foto/1244.jpg'
+import img3 from './foto/toto.jpg'
 
 const teamData = [
   {
@@ -18,7 +19,7 @@ const teamData = [
   {
     name: 'Rafif Ardhinto',
     role: 'Programmer',
-    imgSrc: img1,
+    imgSrc: img3,
   },
 ];
 

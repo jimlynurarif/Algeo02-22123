@@ -9,15 +9,19 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import React, { useState, useRef } from "react";
+import axios from "axios";
+import Dropzone from "react-dropzone";
+import ImageGallery from "./ImageGallery";
 
 
 const ImageUpload = () => {
   const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const fileInputRef = useRef(null);
-
-  
+  const [currentTab, setCurrentTab] = useState("texture");
+  const [searchResult, setSearchResult] = useState(null); // New state to track search result
 
   
   const data = [
@@ -32,6 +36,56 @@ const ImageUpload = () => {
       desc: `Discover vibrancy in images.`,
     },
   ];
+
+  const onDrop = (acceptedFiles) => {
+    setFile(acceptedFiles[0]);
+  };
+
+  const uploadFolder = async () => {
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('images', file);
+
+    try {
+      await axios.post('http://localhost:5000/upload', formData);
+      console.log('Folder uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading folder:', error);
+    }
+  };
+
+  const search = async () => {
+    if (!image && !image.file) {
+      console.error('No image selected');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('image', image.file);
+    formData.append('tab', currentTab);
+  
+    try {
+      const response = await axios.post('http://localhost:5000/upload-search', formData);
+  
+      // Assuming the result, jumlah_gambar, and durasi are in the response
+      const { result, jumlah_gambar, durasi } = response.data;
+      console.log(response.data)
+      // Call the onSearchResult function with the received data
+      setSearchResult({
+        images: JSON.parse(result),
+        jumlahGambar: jumlah_gambar,
+        durasi: durasi,
+      });
+    } catch (error) {
+      // Handle errors
+      console.error('Error uploading image:', error);
+    }
+  };
+  
 
   function selectFiles() {
     fileInputRef.current.click();
@@ -49,6 +103,7 @@ const ImageUpload = () => {
 
     if (selectedFile.type.split("/")[0] === "image") {
       setImage({
+        file: selectedFile,
         name: selectedFile.name,
         url: URL.createObjectURL(selectedFile),
       });
@@ -90,7 +145,7 @@ const ImageUpload = () => {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
-      onDrop={handleDrop}
+      onDroP={handleDrop}
     >
       <div className="top">
         <h1 className="font-bold text-3xl text-accent">Image Processing</h1>
@@ -118,7 +173,7 @@ const ImageUpload = () => {
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
               onDragOver={handleDragOver}
-              onDrop={handleDrop}
+              onDroP={handleDrop}
             >
             {isDragging ? (
               <span className="select">Drop image here</span>
@@ -147,14 +202,29 @@ const ImageUpload = () => {
         )}
         <div className="mx-auto text-center flex flex-col justify-center items-center">
           <div className="py-10 pb-[100px] ">
-            <Button variant="filled" className="" color="green">
+            <div>
+              <Dropzone onDrop={onDrop} accept=".zip" multiple={false}>
+                {({ getRootProps, getInputProps }) => (
+                  <div {...getRootProps({ className: 'dropzone' })}>
+                    <input {...getInputProps()} />
+                    <p>Drag & drop a ZIP file here, or click to select</p>
+                  </div>
+                )}
+              </Dropzone>
+            </div>
+            <Button variant="filled" className="" color="green" onClick={uploadFolder}>
               Upload Dataset
             </Button>
           </div>
-          <Tabs value="texture" className="w-[300px] ">
+          <Tabs value={currentTab} className="w-[300px] ">
             <TabsHeader className="font-bold bg-green-300">
               {data.map(({ label, value }) => (
-                <Tab key={value} value={value} className="font-semibold">
+                <Tab
+                  key={value}
+                  value={value}
+                  className={`font-semibold ${currentTab === value ? 'border-b-2 border-green-500' : ''}`}
+                  onClick={() => setCurrentTab(value)}
+                >
                   {label}
                 </Tab>
               ))}
@@ -168,9 +238,20 @@ const ImageUpload = () => {
             </TabsBody>
           </Tabs>
           <div className="py-5">
-            <Button variant="filled" className="" color="green">
+            <Button variant="filled" className="" color="green" onClick={search}>
               Search
             </Button>
+
+            {searchResult && (
+              <div className="max-w-[1240px] mx-auto">
+                {/* Conditionally render ImageGallery when search result is available */}
+                <ImageGallery
+                  searchResult={searchResult.images}
+                  jumlahGambar={searchResult.jumlahGambar}
+                  durasi={searchResult.durasi}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
