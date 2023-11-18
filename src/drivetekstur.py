@@ -5,18 +5,17 @@ import csv
 import time
 
 def arrimgToVektor(path):
-    arrObj = []
+    arrObjtxtr = []
     arrGambar = os.listdir(path)
     start = time.time()
-    # gambarpilihan = cv2.imread("C:\\Users\\Dhinto\\Documents\\Tubes_algeo2\\src\\dataset\\0.jpg")
-    # imgref =cv2.resize(gambarpilihan, (0,0), fx=0.5,fy = 0.5)
     i = 0
     for img in arrGambar:
-        compared = cv2.imread(os.path.join(path,img))
+        img_path = os.path.join(path, img)
+        compared = cv2.imread(img_path)
         img_resize = cv2.resize(compared, (0,0), fx=0.5,fy = 0.5)
         vektor = tekstur.features(img_resize)
-        arrObj.append({
-            "img" : compared,
+        arrObjtxtr.append({
+            "img" : img_path,
             "vektor" : vektor
         })
         print(f"gamabar ke-{i}")
@@ -25,7 +24,7 @@ def arrimgToVektor(path):
     selisih = finish - start
     print (f"waktu : {selisih}")
     
-    csv_filename = "output.csv"
+    csv_filename = "output2.csv"
     with open(csv_filename, 'w', newline='') as csvfile:
             # Tentukan header
             fieldnames = ["img", "vektor"]
@@ -37,9 +36,9 @@ def arrimgToVektor(path):
             csvwriter.writeheader()
 
             # Tulis data
-            csvwriter.writerows(arrObj)
+            csvwriter.writerows(arrObjtxtr)
 
-    return arrObj
+    return arrObjtxtr
 path = "C:\\Users\\Dhinto\\Documents\\GitHub\\Algeo02-22123\\src\\dataset"
 arrimgToVektor(path)
    
