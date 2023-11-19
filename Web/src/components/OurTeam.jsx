@@ -26,7 +26,7 @@ const teamData = [
 const OurTeam = () => {
   return (
     <section className="">
-      <div className="flex flex-wrap justify-center py-8 text-center h-screen ">
+      <div className="flex flex-wrap justify-center py-8 text-center h-[600px] ">
         <h1 className="w-full text-4xl text-green-800 font-bold">Meet The Team</h1>
       <div className="flex flex-wrap">
         {teamData.map((member, index) => (

@@ -12,6 +12,11 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import Dropzone from "react-dropzone";
 import ImageGallery from "./ImageGallery";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileZipper } from '@fortawesome/free-regular-svg-icons';
+
 
 
 const ImageUpload = () => {
@@ -22,8 +27,10 @@ const ImageUpload = () => {
   const fileInputRef = useRef(null);
   const [currentTab, setCurrentTab] = useState("texture");
   const [searchResult, setSearchResult] = useState(null); // New state to track search result
+  const [filesInFolder, setFilesInFolder] = useState([]);
+  const [zipName, setZipName] = useState(null);
 
-  
+
   const data = [
     {
       label: "TEXTURE",
@@ -43,7 +50,11 @@ const ImageUpload = () => {
 
   const uploadFolder = async () => {
     if (!file) {
-      console.error('No file selected');
+      console.error('No image selected');
+      toast.error("Please select a zip file", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000, // Auto close the notification after 3000 milliseconds (adjust as needed)
+      });
       return;
     }
 
@@ -51,7 +62,33 @@ const ImageUpload = () => {
     formData.append('images', file);
 
     try {
-      await axios.post('http://localhost:5000/upload', formData);
+      // Display a success notification
+      toast.success("Dataset uploaded and processing started successfully", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 4000,
+      });
+      // Send the request to the backend
+      const response = await axios.post('http://localhost:5000/upload', formData);
+      
+      const { zipName, filesInFolder, notif } = response.data;
+
+      console.log('zipname: ',zipName);
+      console.log('file: ',filesInFolder);
+      console.log('notif: ',notif);
+
+      setZipName(zipName);
+      setFilesInFolder(filesInFolder);
+      if (notif === 1) {
+        toast.success("Processing completed!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 4000,
+        });
+      }
+
+      if (response.data && response.data.hideNotification) {
+        toast.dismiss();  // Hide the initial notification
+      }
+
       console.log('Folder uploaded successfully!');
     } catch (error) {
       console.error('Error uploading folder:', error);
@@ -59,8 +96,14 @@ const ImageUpload = () => {
   };
 
   const search = async () => {
-    if (!image && !image.file) {
-      console.error('No image selected');
+
+    if (!image || !image.file) {
+      
+      toast.error("Please select an image before searching", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000, // Auto close the notification after 3000 milliseconds (adjust as needed)
+      });
+
       return;
     }
   
@@ -73,13 +116,27 @@ const ImageUpload = () => {
   
       // Assuming the result, jumlah_gambar, and durasi are in the response
       const { result, jumlah_gambar, durasi } = response.data;
-      console.log(response.data)
-      // Call the onSearchResult function with the received data
-      setSearchResult({
-        images: JSON.parse(result),
-        jumlahGambar: jumlah_gambar,
-        durasi: durasi,
-      });
+  
+      console.log('Result:', result);
+      console.log('Jumlah Gambar:', jumlah_gambar);
+      console.log('Durasi:', durasi);
+  
+      // Check if the result object is empty
+      if (Object.keys(result).length === 0 && result.constructor === Object) {
+        // Handle the case when no result is found
+        setSearchResult(null); // Clear the existing search result
+        toast.warn("No result found", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000, // Auto close the notification after 3000 milliseconds (adjust as needed)
+        });
+      } else {
+        // Call the onSearchResult function with the received data
+        setSearchResult({
+          images: JSON.parse(result),
+          jumlahGambar: jumlah_gambar,
+          durasi: durasi,
+        });
+      }
     } catch (error) {
       // Handle errors
       console.error('Error uploading image:', error);
@@ -115,6 +172,10 @@ const ImageUpload = () => {
     setIsDragging(false); // Set isDragging to true to show the drag area
   }
 
+  function deleteSelectedFile () {
+    setFile(null);
+  };
+
   function handleDragEnter(e) {
     e.preventDefault();
     setIsDragging(true);
@@ -138,6 +199,7 @@ const ImageUpload = () => {
       handleImage(files[0]);
     }
   }
+  
 
   return (
     <div
@@ -201,28 +263,60 @@ const ImageUpload = () => {
           </div>
         )}
         <div className="mx-auto text-center flex flex-col justify-center items-center">
-          <div className="py-10 pb-[100px] ">
-            <div>
-              <Dropzone onDrop={onDrop} accept=".zip" multiple={false}>
-                {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} />
-                    <p>Drag & drop a ZIP file here, or click to select</p>
-                  </div>
+            {filesInFolder.length > 0 && (
+              <div className="mt-4 p-4 border border-gray-300 rounded bg-gray-100">
+                <p className="text-lg font-bold text-gray-800">
+                  The dataset loaded is <span className="text-green-600">{zipName}</span>
+                </p>
+              </div>
+            )}
+          <div className="py-10 pb-[80px] ">
+            <div className="pb-5"> 
+            <Dropzone onDrop={onDrop} accept=".zip" multiple={false}>
+            {({ getRootProps, getInputProps }) => (
+              <div
+                {...getRootProps({
+                  className: 'dropzone bg-white border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center cursor-pointer',
+                })}
+              >
+                <input {...getInputProps()} />
+                {file ? (
+                  <>
+                    <FontAwesomeIcon icon={faFileZipper} bounce size="2xl"   style={{ color: '#00d636'}} />
+                    <p className="text-sm text-gray-600 pt-6">
+                      <strong>Selected file:</strong> {file.name}
+                    </p>
+                    <button
+                      className="text-sm text-red-500 hover:text-red-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring focus:border-blue-300"
+                      onClick={deleteSelectedFile}
+                    >
+                      Delete and Select Again
+                    </button>
+                  </>
+                ) : (
+                <>
+                  <FontAwesomeIcon icon={faFileZipper} size="2xl" />
+                  <p className="text-sm text-gray-600 pt-6">Drag & drop a ZIP file here, or click to select</p>
+                </>
                 )}
-              </Dropzone>
-            </div>
-            <Button variant="filled" className="" color="green" onClick={uploadFolder}>
-              Upload Dataset
-            </Button>
+              </div>
+            )}
+          </Dropzone>
           </div>
+          <Button type="button" variant="filled" className="" color="green" onClick={uploadFolder}>
+            Upload Dataset
+          </Button>
+            <ToastContainer/>
+          </div>
+
+          <div>
           <Tabs value={currentTab} className="w-[300px] ">
             <TabsHeader className="font-bold bg-green-300">
               {data.map(({ label, value }) => (
                 <Tab
                   key={value}
                   value={value}
-                  className={`font-semibold ${currentTab === value ? 'border-b-2 border-green-500' : ''}`}
+                  className={`font-semibold ${currentTab === value ? '' : ''}`}
                   onClick={() => setCurrentTab(value)}
                 >
                   {label}
@@ -237,11 +331,15 @@ const ImageUpload = () => {
               ))}
             </TabsBody>
           </Tabs>
-          <div className="py-5">
+          </div>
+          <div className="py-1">
             <Button variant="filled" className="" color="green" onClick={search}>
               Search
             </Button>
-
+            <ToastContainer />
+          </div>
+        </div>
+      </div>
             {searchResult && (
               <div className="max-w-[1240px] mx-auto">
                 {/* Conditionally render ImageGallery when search result is available */}
@@ -252,9 +350,6 @@ const ImageUpload = () => {
                 />
               </div>
             )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

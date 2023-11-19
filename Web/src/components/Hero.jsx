@@ -64,7 +64,7 @@ const Hero = ({onScrollToImageUpload}) => {
                     <Link to='/guide'>
                         <Button variant="outlined" color="green">Explore the Guide</Button>
                     </Link>
-                    <a href="#buttons-with-link">
+                    <a >
                         <Button variant="gradient" color="green" onClick={onScrollToImageUpload}>
                             Start Image Processing
                         </Button>

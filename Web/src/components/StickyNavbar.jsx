@@ -3,12 +3,10 @@ import {
   Navbar,
   MobileNav,
   Typography,
-  Button,
   IconButton,
 } from "@material-tailwind/react";
 import '../index.css';
 import { Link }  from 'react-router-dom';
-
  
 export function StickyNavbar({onScrollToHomepage}) {
   const [openNav, setOpenNav] = React.useState(false);

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Hero from "./components/Hero";
 import { StickyNavbar } from "./components/StickyNavbar";
 import ImageUpload from "./components/UploadImage";
-import ImageGallery from "./components/ImageGallery";
 import OurTeam from "./components/OurTeam";
 import GuidePage from "./components/GuidePage";
 
