@@ -5,7 +5,6 @@
 * [General Info](#general-information)
 * [Technologies Used](#technologies-used)
 * [Features](#features)
-* [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Usage](#usage)
 * [Project Status](#project-status)
@@ -37,11 +36,6 @@ List the ready features here:
 - CBIR by texture
 
 
-## Screenshots
-##![Example screenshot](./img/screenshot.png)
-<!-- If you have screenshots you'd like to share, include them here. -->
-
-
 ## Setup
 - install react Js
 - pip install Flask
@@ -63,9 +57,6 @@ List the ready features here:
 - pilih texture atau color
 - klik search
 - Hasil muncul
-
-##`write-your-code-here`
-
 
 ## Project Status
 Project is: DONE, CHECKED
