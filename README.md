@@ -51,6 +51,7 @@ List the ready features here:
 
 
 ## Usage
+- [tutorial](https://youtu.be/fsf0D43lMIQ?si=f-i9THXBL1zlax_o)
 - input dataset (zip)
 - klik upload dataset tunggu cache selesai dibuat
 - input query image
