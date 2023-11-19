@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  background-color: #ebf0e0;
+}
+
+.glow-on-hover {
+  animation: glow 1.5s infinite;
+}
+
+.glow-on-hover:hover,
+.glow-on-hover:focus {
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
+}
+
+
+
