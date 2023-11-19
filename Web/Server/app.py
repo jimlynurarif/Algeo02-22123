@@ -88,8 +88,7 @@ def upload_dataset():
 
             # Send a response to the frontend with zip name and list of files
             return jsonify({
-                'hideNotification': 1,
-                'message': 'Dataset uploaded and processing started successfully',
+                'hideNotification': True,
                 'zipName': zip_name,
                 'filesInFolder': files_in_folder
             })
@@ -154,7 +153,7 @@ if __name__ == '__main__':
    if not os.path.exists(app.config['IMG_FOLDER']):
        os.makedirs(app.config['IMG_FOLDER'])
 
-   app.run(debug=True)
+app.run(debug=True)
 
 
 

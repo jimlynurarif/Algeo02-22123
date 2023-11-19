@@ -48,6 +48,11 @@ const ImageUpload = () => {
     setFile(acceptedFiles[0]);
   };
 
+  const handleButtonClick = (event) => {
+    event.preventDefault();
+    uploadFolder();
+  };
+
   const uploadFolder = async () => {
     if (!file) {
       console.error('No image selected');
@@ -70,7 +75,7 @@ const ImageUpload = () => {
       // Send the request to the backend
       const response = await axios.post('http://localhost:5000/upload', formData);
       
-      const { zipName, filesInFolder, notif } = response.data;
+      const { notif, zipName, filesInFolder} = response.data;
 
       console.log('zipname: ',zipName);
       console.log('file: ',filesInFolder);
@@ -78,15 +83,11 @@ const ImageUpload = () => {
 
       setZipName(zipName);
       setFilesInFolder(filesInFolder);
-      if (notif === 1) {
+      if (notif) {
         toast.success("Processing completed!", {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 4000,
         });
-      }
-
-      if (response.data && response.data.hideNotification) {
-        toast.dismiss();  // Hide the initial notification
       }
 
       console.log('Folder uploaded successfully!');
