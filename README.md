@@ -70,7 +70,7 @@ For deployment for commersialization we have to decrease runtime and adding uplo
 Give credit here.
 - This project was inspired by Google Lens
 - This project was based on [this tutorial](https://docs.google.com/document/d/1HVDyywnUdNz9hStgx5ZLqHypK89hWH8qfERJOiDw6KA/edit?pli=1).
-- Many thanks to our Lecturer (Dr. Rila Mandala) and Teaching Assistant
+- Many thanks to our Lecturer (Ir. Rila Mandala, M.Eng., Ph.D.) and Teaching Assistant
 
 
 ## Contact
